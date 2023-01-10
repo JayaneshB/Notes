@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Notes</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="date">Date</string>
+    <string name="add_title">Add title</string>
+    <string name="add_description">Add Description</string>
+    <string name="fill_the_title">Fill the title</string>
+    <string name="add_date">Date</string>
+    <string name="date_format">(DD/MM/YYYY)</string>
+    <string name="fill_the_description">Fill the description</string>
+</resources>
