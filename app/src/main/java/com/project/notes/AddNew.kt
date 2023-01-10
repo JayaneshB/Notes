@@ -9,10 +9,7 @@ import android.widget.Toast
 import com.project.notes.database.Mydatabase
 import com.project.notes.database.Note
 import com.project.notes.databinding.ActivityAddNewBinding
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -22,6 +19,9 @@ class AddNew : AppCompatActivity(),DatePickerDialog.OnDateSetListener {
     private lateinit var calendar : Calendar
 
     private lateinit var formatter : SimpleDateFormat
+
+    private lateinit var title: String
+    private lateinit var desc: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,15 +41,52 @@ class AddNew : AppCompatActivity(),DatePickerDialog.OnDateSetListener {
             ).show()
         }
 
+        if(intent.hasExtra(NOTE_ID)) {
+
+             title= intent.getStringExtra(TITLE).toString()
+             desc = intent.getStringExtra(DESC).toString()
+
+            binding.titleEdit.setText(title)
+            binding.descEdit.setText(desc)
+
+
+        }
+
+
+
         binding.btnSave.setOnClickListener {
             
             if(validate()) {
-                
-                saveNote()
-            }
+                if(intent.hasExtra(NOTE_ID)) {
 
-            val intent = Intent(this@AddNew,MainActivity::class.java)
-            startActivity(intent)
+                    UpdateNote()
+
+                } else {
+
+                    saveNote()
+
+                }
+            }
+        }
+    }
+
+    private fun UpdateNote() {
+
+        val id = intent.getIntExtra(NOTE_ID,-1)
+        val date = intent.getStringExtra(DATE)
+
+        val database = Mydatabase.getInstance(this)
+        val noteDao = database?.noteDao()
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+            val note = Note(id,binding.titleEdit.text.toString(),binding.descEdit.text.toString(),date!! )
+            noteDao?.update(note)
+            withContext(Dispatchers.Main) {
+                val intent = Intent(this@AddNew,MainActivity::class.java)
+                setResult(RESULT_OK,intent)
+                finish()
+            }
         }
     }
 
@@ -62,7 +99,8 @@ class AddNew : AppCompatActivity(),DatePickerDialog.OnDateSetListener {
         GlobalScope.launch {
             noteDao?.insert(note)
             withContext(Dispatchers.Main) {
-                Toast.makeText(this@AddNew,"Note Saved",Toast.LENGTH_SHORT).show()
+                 val intent = Intent(this@AddNew,MainActivity::class.java)
+                setResult(RESULT_OK,intent)
                 finish()
             }
         } 

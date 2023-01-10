@@ -9,8 +9,8 @@
         <entry key="app/src/main/res/drawable/ic_calendar_btn_bg.xml" value="0.16" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.178" />
         <entry key="app/src/main/res/layout/activity_add_new.xml" value="0.14617462158203126" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.28804347826086957" />
-        <entry key="app/src/main/res/layout/view.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/view.xml" value="0.21653594970703127" />
       </map>
     </option>
   </component>
