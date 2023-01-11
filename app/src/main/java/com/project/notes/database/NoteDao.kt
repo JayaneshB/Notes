@@ -17,7 +17,7 @@ interface NoteDao {
     fun delete(note:Note)
 
     @Query("SELECT * FROM note_table")
-    fun getAllNote() : List<Note>
+    fun getAllNote() : MutableList<Note>
 
     @Query("DELETE FROM note_table")
     fun deleteAllNotes()

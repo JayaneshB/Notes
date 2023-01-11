@@ -8,10 +8,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.project.notes.R
 import com.project.notes.database.Note
 
-class Note_adapter(var list: List<Note>, private val onclick: noteClickListener) :
+class Note_adapter(var list: MutableList<Note>, private val onClick: noteClickListener) :
     RecyclerView.Adapter<Note_adapter.viewHolder>() {
 
     class viewHolder(view: View, onclick: noteClickListener) : RecyclerView.ViewHolder(view) {
+
+
         init {
             itemView.setOnClickListener {
 
@@ -28,7 +30,7 @@ class Note_adapter(var list: List<Note>, private val onclick: noteClickListener)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): viewHolder {
 
         val view = LayoutInflater.from(parent.context).inflate(R.layout.view, parent, false)
-        return viewHolder(view, onclick)
+        return viewHolder(view, onClick)
 
     }
 
@@ -38,6 +40,10 @@ class Note_adapter(var list: List<Note>, private val onclick: noteClickListener)
         holder.title.text = note.title
         holder.desc.text = note.desc
         holder.date.text = note.date
+        holder.itemView.setOnLongClickListener {
+            onClick.onLongClick(position)
+            true
+        }
     }
 
     override fun getItemCount(): Int {
@@ -47,11 +53,12 @@ class Note_adapter(var list: List<Note>, private val onclick: noteClickListener)
     interface noteClickListener {
 
         fun onItemClick(position: Int)
+        fun onLongClick(position: Int)
     }
 
     fun clearList() {
 
-        list = emptyList()
+        list.clear()
         notifyDataSetChanged()
     }
 }

@@ -96,8 +96,8 @@
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/btn_calendar"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:background="@drawable/ic_calendar_btn_bg"
         android:src="@drawable/ic_calendar_btn"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -109,8 +109,8 @@
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/btn_save"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:background="@drawable/ic_btn_bg"
         android:src="@drawable/ic_save_btn"
         app:layout_constraintBottom_toBottomOf="parent"

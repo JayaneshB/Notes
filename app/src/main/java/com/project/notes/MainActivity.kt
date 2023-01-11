@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
 
     private lateinit var adapter: Note_adapter
 
-    private lateinit var list: List<Note>
+    private lateinit var list: MutableList<Note>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,8 +70,8 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
 
         CoroutineScope(Dispatchers.IO).launch {
 
-            val  list: List<Note> = data.getAllNote()
-            this@MainActivity.list = list
+            list = data.getAllNote()
+
             withContext(Dispatchers.Main) {
                 adapter = Note_adapter(list, this@MainActivity)
                 binding.recyclerView.adapter = adapter
@@ -94,9 +94,8 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
         intent.putExtra(DESC, note.desc)
         intent.putExtra(DATE, note.date)
         startActivityForResult(intent, EDIT_REQUEST_CODE)
-
-
     }
+
 
     /**
      *  Retrieving the result using received from the startActivityForResult
@@ -184,6 +183,32 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
 
             }
         }
+    }
+
+    /**
+     *  Performing longClick operation for
+     *  deleting a particular item
+     */
+
+    override fun onLongClick(position: Int){
+
+        val note: Note = list[position]
+        val dialog = AlertDialog.Builder(this@MainActivity)
+            .setTitle("Delete")
+            .setMessage("Are you sure you want to delete this note?")
+            .setPositiveButton("Yes") { dialog: DialogInterface, which: Int ->
+
+            val database = Mydatabase.getInstance(this@MainActivity)
+            val data = database!!.noteDao()
+            CoroutineScope(Dispatchers.IO).launch {
+                data.delete(note)
+                list.removeAt(position)
+                adapter.notifyItemRemoved(position)
+            }
+        }
+        dialog.setNegativeButton("No", null)
+        val alert = dialog.create()
+        alert.show()
     }
 }
 
