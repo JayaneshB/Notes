@@ -49,4 +49,10 @@ class Note_adapter (var list: List<Note>,private val onclick : noteClickListener
 
         fun onItemClick(position:Int)
     }
+
+    fun clearList() {
+
+         list= emptyList()
+        notifyDataSetChanged()
+    }
 }

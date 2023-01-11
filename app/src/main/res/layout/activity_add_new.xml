@@ -104,8 +104,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.59"
         app:layout_constraintStart_toEndOf="@+id/date_edit"
-        app:layout_constraintTop_toBottomOf="@+id/desc_edit"
-        app:layout_constraintVertical_bias="0.207" />
+        app:layout_constraintTop_toBottomOf="@+id/appCompatTextView"
+        app:layout_constraintVertical_bias="0.050000012" />
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/btn_save"

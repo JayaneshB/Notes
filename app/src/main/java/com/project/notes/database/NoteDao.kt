@@ -19,4 +19,7 @@ interface NoteDao {
     @Query("SELECT * FROM note_table")
     fun getAllNote() : List<Note>
 
+    @Query("DELETE FROM note_table")
+    fun deleteAllNotes()
+
 }

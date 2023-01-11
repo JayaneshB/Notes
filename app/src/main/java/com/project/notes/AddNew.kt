@@ -13,15 +13,16 @@ import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-class AddNew : AppCompatActivity(),DatePickerDialog.OnDateSetListener {
-    private lateinit var binding : ActivityAddNewBinding
-    
-    private lateinit var calendar : Calendar
+class AddNew : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
+    private lateinit var binding: ActivityAddNewBinding
 
-    private lateinit var formatter : SimpleDateFormat
+    private lateinit var calendar: Calendar
+
+    private lateinit var formatter: SimpleDateFormat
 
     private lateinit var title: String
     private lateinit var desc: String
+    private lateinit var date: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,8 +36,10 @@ class AddNew : AppCompatActivity(),DatePickerDialog.OnDateSetListener {
          *  to select the date for the aplication
          */
 
-        binding.btnCalendar.setOnClickListener { 
-            
+        formatter = SimpleDateFormat("dd/MM/yyyy", Locale.US)
+
+        binding.btnCalendar.setOnClickListener {
+
             DatePickerDialog(
                 this@AddNew,
                 this,
@@ -46,13 +49,16 @@ class AddNew : AppCompatActivity(),DatePickerDialog.OnDateSetListener {
             ).show()
         }
 
-        if(intent.hasExtra(NOTE_ID)) {
+        if (intent.hasExtra(NOTE_ID)) {
 
-             title= intent.getStringExtra(TITLE).toString()
-             desc = intent.getStringExtra(DESC).toString()
+            title = intent.getStringExtra(TITLE).toString()
+            desc = intent.getStringExtra(DESC).toString()
+            date = intent.getStringExtra(DATE).toString()
+
 
             binding.titleEdit.setText(title)
             binding.descEdit.setText(desc)
+            binding.dateEdit.setText(date)
 
 
         }
@@ -64,9 +70,9 @@ class AddNew : AppCompatActivity(),DatePickerDialog.OnDateSetListener {
 
 
         binding.btnSave.setOnClickListener {
-            
-            if(validate()) {
-                if(intent.hasExtra(NOTE_ID)) {
+
+            if (validate()) {
+                if (intent.hasExtra(NOTE_ID)) {
 
                     updateNote()
 
@@ -81,19 +87,24 @@ class AddNew : AppCompatActivity(),DatePickerDialog.OnDateSetListener {
 
     private fun updateNote() {
 
-        val id = intent.getIntExtra(NOTE_ID,-1)
-        val date = intent.getStringExtra(DATE)
+        val id = intent.getIntExtra(NOTE_ID, -1)
+
 
         val database = Mydatabase.getInstance(this)
         val noteDao = database?.noteDao()
 
         CoroutineScope(Dispatchers.IO).launch {
 
-            val note = Note(id,binding.titleEdit.text.toString(),binding.descEdit.text.toString(),date!! )
+            val note = Note(
+                id,
+                binding.titleEdit.text.toString(),
+                binding.descEdit.text.toString(),
+                binding.dateEdit.text.toString()
+            )
             noteDao?.update(note)
             withContext(Dispatchers.Main) {
-                val intent = Intent(this@AddNew,MainActivity::class.java)
-                setResult(RESULT_OK,intent)
+                val intent = Intent(this@AddNew, MainActivity::class.java)
+                setResult(RESULT_OK, intent)
                 finish()
             }
         }
@@ -104,24 +115,31 @@ class AddNew : AppCompatActivity(),DatePickerDialog.OnDateSetListener {
 
         val database = Mydatabase.getInstance(this)
         val noteDao = database?.noteDao()
-        val note = Note(0,binding.titleEdit.text.toString(),binding.descEdit.text.toString(),binding.dateEdit.text.toString())
+        val note = Note(
+            0,
+            binding.titleEdit.text.toString(),
+            binding.descEdit.text.toString(),
+            binding.dateEdit.text.toString()
+        )
         GlobalScope.launch {
             noteDao?.insert(note)
             withContext(Dispatchers.Main) {
-                 val intent = Intent(this@AddNew,MainActivity::class.java)
-                setResult(RESULT_OK,intent)
+                val intent = Intent(this@AddNew, MainActivity::class.java)
+                setResult(RESULT_OK, intent)
                 finish()
             }
-        } 
+        }
     }
 
     private fun validate(): Boolean {
 
-         if(binding.titleEdit.text.toString().isEmpty() || binding.descEdit.text.toString().isEmpty() || binding.dateEdit.text.toString().isEmpty()) {
+        if (binding.titleEdit.text.toString().isEmpty() || binding.descEdit.text.toString()
+                .isEmpty() || binding.dateEdit.text.toString().isEmpty()
+        ) {
 
-             Toast.makeText(this@AddNew,"Please fill the requirements",Toast.LENGTH_SHORT).show()
-             return false
-         }
+            Toast.makeText(this@AddNew, "Please fill the requirements", Toast.LENGTH_SHORT).show()
+            return false
+        }
         return true
     }
 

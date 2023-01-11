@@ -1,9 +1,13 @@
 package com.project.notes
 
+import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.project.notes.adapter.Note_adapter
 import com.project.notes.database.Mydatabase
@@ -110,8 +114,81 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
             setData()
         }
 
+    }
+
+    /**
+     *  Creating a menu
+     */
+
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+
+        menuInflater.inflate(R.menu.menu_list, menu)
+
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    /**
+     *  Functions performed when an item is selected
+     */
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when (item.itemId) {
+
+            R.id.deleteAll -> {
+
+                showDialog()
+            }
+
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
+    /**
+     *  Displaying a alert pop box to confirm the selected details
+     */
+
+
+    private fun showDialog() {
+
+        val dialog = AlertDialog.Builder(this@MainActivity)
+            .setTitle("Delete")
+            .setMessage("Are you sure to delete this ?")
+            .setPositiveButton("Yes", object : DialogInterface.OnClickListener {
+                override fun onClick(p0: DialogInterface?, p1: Int) {
+                    deleteAllNotes()
+                }
+            })
+            .setNegativeButton("NO", null).show()
 
     }
+
+    /**
+     *  Function for deleting all the notes created
+     */
+
+    private fun deleteAllNotes() {
+
+        val database = Mydatabase.getInstance(this@MainActivity)
+        val noteDao = database?.noteDao()
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+            noteDao?.deleteAllNotes()
+            withContext(Dispatchers.Main) {
+
+                Toast.makeText(this@MainActivity,"Deleted Successfully",Toast.LENGTH_SHORT).show()
+                adapter.clearList()
+
+            }
+
+        }
+
+
+    }
+
 
 }
 
