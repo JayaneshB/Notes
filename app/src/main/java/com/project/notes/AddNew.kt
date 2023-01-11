@@ -27,9 +27,14 @@ class AddNew : AppCompatActivity(),DatePickerDialog.OnDateSetListener {
         super.onCreate(savedInstanceState)
         binding = ActivityAddNewBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        
+
         calendar = Calendar.getInstance()
-        
+
+        /**
+         *  Added a calendar image button
+         *  to select the date for the aplication
+         */
+
         binding.btnCalendar.setOnClickListener { 
             
             DatePickerDialog(
@@ -52,6 +57,10 @@ class AddNew : AppCompatActivity(),DatePickerDialog.OnDateSetListener {
 
         }
 
+        /**
+         *  Save button operation for both
+         *  update and save option
+         */
 
 
         binding.btnSave.setOnClickListener {
@@ -59,7 +68,7 @@ class AddNew : AppCompatActivity(),DatePickerDialog.OnDateSetListener {
             if(validate()) {
                 if(intent.hasExtra(NOTE_ID)) {
 
-                    UpdateNote()
+                    updateNote()
 
                 } else {
 
@@ -70,7 +79,7 @@ class AddNew : AppCompatActivity(),DatePickerDialog.OnDateSetListener {
         }
     }
 
-    private fun UpdateNote() {
+    private fun updateNote() {
 
         val id = intent.getIntExtra(NOTE_ID,-1)
         val date = intent.getStringExtra(DATE)

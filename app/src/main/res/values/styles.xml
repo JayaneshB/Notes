@@ -40,8 +40,8 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@drawable/ic_btn_bg</item>
-
-        <item name="android:src">@drawable/ic_btn_add</item>
+        <item name="android:backgroundTint">@color/orangish_yellow</item>
+        <item name="android:src">@drawable/ic_btn_add_white</item>
 
 
 

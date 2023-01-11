@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.project.notes.adapter.Note_adapter
 import com.project.notes.database.Mydatabase
 import com.project.notes.database.Note
@@ -16,22 +15,21 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-val REQUEST_CODE=1
-val EDIT_REQUEST_CODE=2
-val NOTE_ID : String = "NOTE_ID"
-val TITLE = "TITLE"
-val DESC = "DESC"
-val DATE = "DATE"
+const val REQUEST_CODE = 1
+const val EDIT_REQUEST_CODE = 2
+const val NOTE_ID: String = "NOTE_ID"
+const val TITLE = "TITLE"
+const val DESC = "DESC"
+const val DATE = "DATE"
 
-class MainActivity : AppCompatActivity(),Note_adapter.noteClickListener {
+class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
 
-    private lateinit var binding : ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
 
-    private lateinit var recyleview : RecyclerView
 
-    private lateinit var adapter : Note_adapter
+    private lateinit var adapter: Note_adapter
 
-    private lateinit var list : List<Note>
+    private lateinit var list: List<Note>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,9 +43,15 @@ class MainActivity : AppCompatActivity(),Note_adapter.noteClickListener {
         setData()
 
 
+        /**
+         *  Using startActivityForResult for displaying the result in the same activity
+         *  without creating a new activity
+         */
+
+
         binding.btnAdd.setOnClickListener {
 
-            val intent = Intent(this@MainActivity,AddNew::class.java)
+            val intent = Intent(this@MainActivity, AddNew::class.java)
             startActivityForResult(intent, REQUEST_CODE)
 
         }
@@ -62,10 +66,10 @@ class MainActivity : AppCompatActivity(),Note_adapter.noteClickListener {
 
         CoroutineScope(Dispatchers.IO).launch {
 
-            val list:List<Note> = data.getAllNote()
-            this@MainActivity.list=list
-            withContext(Dispatchers.Main){
-                adapter = Note_adapter(list,this@MainActivity )
+            val list: List<Note> = data.getAllNote()
+            this@MainActivity.list = list
+            withContext(Dispatchers.Main) {
+                adapter = Note_adapter(list, this@MainActivity)
                 binding.recyclerView.adapter = adapter
                 adapter.notifyDataSetChanged()
 
@@ -73,28 +77,36 @@ class MainActivity : AppCompatActivity(),Note_adapter.noteClickListener {
         }
     }
 
+    /**
+     *  Adding the details to be updated
+     */
+
     override fun onItemClick(position: Int) {
 
-        val note : Note = list[position]
-        val intent = Intent(this@MainActivity,AddNew::class.java)
-        intent.putExtra(NOTE_ID,note.id)
-        intent.putExtra(TITLE,note.title)
-        intent.putExtra(DESC,note.desc)
-        intent.putExtra(DATE,note.date)
+        val note: Note = list[position]
+        val intent = Intent(this@MainActivity, AddNew::class.java)
+        intent.putExtra(NOTE_ID, note.id)
+        intent.putExtra(TITLE, note.title)
+        intent.putExtra(DESC, note.desc)
+        intent.putExtra(DATE, note.date)
         startActivityForResult(intent, EDIT_REQUEST_CODE)
 
 
     }
 
+    /**
+     *  Retrieving the result using received from the startActivityForResult
+     */
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if(requestCode == EDIT_REQUEST_CODE && resultCode == RESULT_OK) {
-            Toast.makeText(this,"Note Updated",Toast.LENGTH_SHORT).show()
+        if (requestCode == EDIT_REQUEST_CODE && resultCode == RESULT_OK) {
+            Toast.makeText(this, "Note Updated", Toast.LENGTH_SHORT).show()
             setData()
-        } else if( requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
-            Toast.makeText(this,"Note Saved",Toast.LENGTH_SHORT).show()
+        } else if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+            Toast.makeText(this, "Note Saved", Toast.LENGTH_SHORT).show()
             setData()
         }
 
