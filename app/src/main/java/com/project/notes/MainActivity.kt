@@ -183,12 +183,7 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
                 adapter.clearList()
 
             }
-
         }
-
-
     }
-
-
 }
 
