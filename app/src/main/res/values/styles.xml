@@ -43,7 +43,23 @@
         <item name="android:backgroundTint">@color/orangish_yellow</item>
         <item name="android:src">@drawable/ic_btn_add_white</item>
 
+    </style>
 
+    <style name ="TitleStyle">
+
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">15dp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+
+    </style>
+
+    <style name="AddNew_ImageBtn">
+
+        <item name="android:layout_width">45dp</item>
+        <item name="android:layout_height">45dp</item>
 
     </style>
 
