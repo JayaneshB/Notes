@@ -30,7 +30,6 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
 
     private lateinit var binding: ActivityMainBinding
 
-
     private lateinit var adapter: Note_adapter
 
     private lateinit var list: List<Note>
@@ -39,6 +38,7 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setSupportActionBar(findViewById(R.id.toolbar))
 
 
         binding.recyclerView.setHasFixedSize(true)
@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
 
         CoroutineScope(Dispatchers.IO).launch {
 
-            val list: List<Note> = data.getAllNote()
+            val  list: List<Note> = data.getAllNote()
             this@MainActivity.list = list
             withContext(Dispatchers.Main) {
                 adapter = Note_adapter(list, this@MainActivity)

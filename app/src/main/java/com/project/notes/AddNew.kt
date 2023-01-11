@@ -21,7 +21,9 @@ class AddNew : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
     private lateinit var formatter: SimpleDateFormat
 
     private lateinit var title: String
+
     private lateinit var desc: String
+
     private lateinit var date: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
