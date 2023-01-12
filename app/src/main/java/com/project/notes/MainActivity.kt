@@ -210,5 +210,6 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
         val alert = dialog.create()
         alert.show()
     }
+
 }
 
