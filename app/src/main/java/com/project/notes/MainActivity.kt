@@ -2,12 +2,14 @@ package com.project.notes
 
 import android.content.DialogInterface
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.SystemClock
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.project.notes.adapter.Note_adapter
 import com.project.notes.database.Mydatabase
@@ -27,6 +29,7 @@ const val DESC = "DESC"
 const val DATE = "DATE"
 
 class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
+    private  var mLastClickTime: Long = 0
 
     private lateinit var binding: ActivityMainBinding
 
@@ -54,29 +57,32 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
 
 
         binding.btnAdd.setOnClickListener {
-
+           Log.e("btnAdd","btnAdd")
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000){
+                return@setOnClickListener
+            }
+            mLastClickTime = SystemClock.elapsedRealtime();
             val intent = Intent(this@MainActivity, AddNew::class.java)
             startActivityForResult(intent, REQUEST_CODE)
-
         }
-
     }
 
     private fun setData() {
 
         val database = Mydatabase.getInstance(this@MainActivity)
-        val data = database!!.noteDao()
+        if (database!=null) {
+            val data = database.noteDao()
+            CoroutineScope(Dispatchers.IO).launch {
 
+                list = data.getAllNote()
 
-        CoroutineScope(Dispatchers.IO).launch {
-
-            list = data.getAllNote()
-
-            withContext(Dispatchers.Main) {
-                adapter = Note_adapter(list, this@MainActivity)
-                binding.recyclerView.adapter = adapter
-                adapter.notifyDataSetChanged()
-
+                withContext(Dispatchers.Main) {
+                    adapter = Note_adapter(list, this@MainActivity)
+                    binding.recyclerView.adapter = adapter
+                    adapter.notifyDataSetChanged()
+                    Log.d("Testing", "setData:")
+               //     adapter.notifyItemChanged(-1)
+                }
             }
         }
     }
@@ -88,12 +94,19 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
     override fun onItemClick(position: Int) {
 
         val note: Note = list[position]
+
+        /**
+         *  Can use apply{} instead of initialising a variable
+         */
+
         val intent = Intent(this@MainActivity, AddNew::class.java)
         intent.putExtra(NOTE_ID, note.id)
         intent.putExtra(TITLE, note.title)
         intent.putExtra(DESC, note.desc)
         intent.putExtra(DATE, note.date)
+        intent.putExtra("position",position)
         startActivityForResult(intent, EDIT_REQUEST_CODE)
+
     }
 
 
@@ -106,6 +119,13 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == EDIT_REQUEST_CODE && resultCode == RESULT_OK) {
+            val position = data?.getIntExtra("position",-1)
+            if(position!=-1) {
+                if (position != null) {
+                    Log.d("Testing", "onActivityResult: ")
+                    adapter.notifyItemChanged(position,position)
+                }
+            }
             Toast.makeText(this, "Note Updated", Toast.LENGTH_SHORT).show()
             setData()
         } else if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {

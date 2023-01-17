@@ -8,7 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.project.notes.R
 import com.project.notes.database.Note
 
-class Note_adapter(var list: MutableList<Note>, private val onClick: noteClickListener) :
+class Note_adapter(var list: MutableList<Note>,
+                   private val onClick: noteClickListener) :
     RecyclerView.Adapter<Note_adapter.viewHolder>() {
 
     class viewHolder(view: View, onclick: noteClickListener) : RecyclerView.ViewHolder(view) {
@@ -20,6 +21,8 @@ class Note_adapter(var list: MutableList<Note>, private val onClick: noteClickLi
                 onclick.onItemClick(adapterPosition)
             }
         }
+
+
 
         var title: TextView = view.findViewById(R.id.view_title)
         var desc: TextView = view.findViewById(R.id.view_desc)
@@ -42,12 +45,19 @@ class Note_adapter(var list: MutableList<Note>, private val onClick: noteClickLi
         holder.date.text = note.date
         holder.itemView.setOnLongClickListener {
             onClick.onLongClick(position)
+//            notifyItemChanged(position)
             true
         }
     }
 
     override fun getItemCount(): Int {
         return list.size
+    }
+
+    override fun getItemId(position: Int): Long {
+
+        return list[position].id.toLong()
+
     }
 
     interface noteClickListener {
@@ -61,4 +71,5 @@ class Note_adapter(var list: MutableList<Note>, private val onClick: noteClickLi
         list.clear()
         notifyDataSetChanged()
     }
+
 }

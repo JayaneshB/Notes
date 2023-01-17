@@ -12,10 +12,9 @@ abstract class Mydatabase : RoomDatabase() {
 
         private var INSTANCE : Mydatabase? = null
 
-        fun getInstance (context: Context) : Mydatabase? {
+        fun getInstance (context: Context) : Mydatabase? {//safe call
 
-            if(INSTANCE == null)
-            {
+            if(INSTANCE == null) {
                 synchronized(Mydatabase::class.java) {
                     INSTANCE = Room.databaseBuilder(
                         context,
