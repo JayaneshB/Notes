@@ -1,5 +1,6 @@
 package com.project.notes
 
+
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
@@ -18,7 +19,6 @@ import com.project.notes.database.Mydatabase
 import com.project.notes.database.Note
 import com.project.notes.databinding.ActivityMainBinding
 import com.project.notes.swipegestures.SwipeGestures
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -34,7 +34,7 @@ const val DESC = "DESC"
 const val DATE = "DATE"
 
 class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
-    private  var mLastClickTime: Long = 0
+    private var mLastClickTime: Long = 0
 
     private lateinit var binding: ActivityMainBinding
 
@@ -59,38 +59,57 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
          */
 
         val swipegesture = object : SwipeGestures(this@MainActivity) {
+
+
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,
                 target: RecyclerView.ViewHolder
             ): Boolean {
 
-                val from_positon = viewHolder.adapterPosition
-                val to_position = target.adapterPosition
+                val fromPositon = viewHolder.absoluteAdapterPosition
+                val toPosition = target.absoluteAdapterPosition
 
-                Collections.swap(list,from_positon,to_position)
-                adapter.notifyItemMoved(from_positon,to_position)
-
-                return false
+                Collections.swap(list, fromPositon, toPosition)
+                adapter.notifyItemMoved(fromPositon, toPosition)
+                return true
 
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
 
-                when(direction) {
+                when (direction) {
 
                     ItemTouchHelper.LEFT -> {
+                        // need to delete the actual record from the db
 
-                        adapter.deleteItem(viewHolder.adapterPosition)
+                        val dialog = AlertDialog.Builder(this@MainActivity)
+                            .setTitle("Delete")
+                            .setMessage("Are you sure you want to delete this note?")
+                            .setPositiveButton("Yes") { dialog: DialogInterface, which: Int ->
+
+                                val database = Mydatabase.getInstance(this@MainActivity)
+                                val note = database?.noteDao()
+                                val position = viewHolder.absoluteAdapterPosition
+
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    note?.delete(list[viewHolder.absoluteAdapterPosition])
+                                    list.removeAt(position)
+                                    adapter.notifyDataSetChanged()
+                                }
+
+                            }
+                        dialog.setNegativeButton("No", null)
+                        val alert = dialog.create()
+                        alert.show()
 
                     }
                 }
 
             }
         }
-
         val touchHelper = ItemTouchHelper(swipegesture)
-        touchHelper.attachToRecyclerView(recyclerView)
+        touchHelper.attachToRecyclerView(binding.recyclerView)
 
 
         /**
@@ -100,11 +119,11 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
 
 
         binding.btnAdd.setOnClickListener {
-           Log.e("btnAdd","btnAdd")
-            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000){
+            Log.e("btnAdd", "btnAdd")
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return@setOnClickListener
             }
-            mLastClickTime = SystemClock.elapsedRealtime();
+            mLastClickTime = SystemClock.elapsedRealtime()
             val intent = Intent(this@MainActivity, AddNew::class.java)
             startActivityForResult(intent, REQUEST_CODE)
         }
@@ -117,7 +136,7 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
     private fun setData() {
 
         val database = Mydatabase.getInstance(this@MainActivity)
-        if (database!=null) {
+        if (database != null) {
             val data = database.noteDao()
             CoroutineScope(Dispatchers.IO).launch {
 
@@ -128,7 +147,7 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
                     binding.recyclerView.adapter = adapter
                     adapter.notifyDataSetChanged()
                     Log.d("Testing", "setData:")
-               //     adapter.notifyItemChanged(-1)
+                    //     adapter.notifyItemChanged(-1)
                 }
             }
         }
@@ -151,7 +170,7 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
         intent.putExtra(TITLE, note.title)
         intent.putExtra(DESC, note.desc)
         intent.putExtra(DATE, note.date)
-        intent.putExtra("position",position)
+        intent.putExtra("position", position)
         startActivityForResult(intent, EDIT_REQUEST_CODE)
 
     }
@@ -166,11 +185,11 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == EDIT_REQUEST_CODE && resultCode == RESULT_OK) {
-            val position = data?.getIntExtra("position",-1)
-            if(position!=-1) {
+            val position = data?.getIntExtra("position", -1)
+            if (position != -1) {
                 if (position != null) {
                     Log.d("Testing", "onActivityResult: ")
-                    adapter.notifyItemChanged(position,position)
+                    adapter.notifyItemChanged(position, position)
                 }
             }
             Toast.makeText(this, "Note Updated", Toast.LENGTH_SHORT).show()
@@ -219,7 +238,7 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
 
     private fun showDialog() {
 
-        val dialog = AlertDialog.Builder(this@MainActivity)
+        AlertDialog.Builder(this@MainActivity)
             .setTitle("Delete")
             .setMessage("Are you sure to delete this ?")
             .setPositiveButton("Yes", object : DialogInterface.OnClickListener {
@@ -245,7 +264,7 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
             noteDao?.deleteAllNotes()
             withContext(Dispatchers.Main) {
 
-                Toast.makeText(this@MainActivity,"Deleted Successfully",Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, "Deleted Successfully", Toast.LENGTH_SHORT).show()
                 adapter.clearList()
 
             }
@@ -257,7 +276,7 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
      *  deleting a particular item
      */
 
-    override fun onLongClick(position: Int){
+    override fun onLongClick(position: Int) {
 
         val note: Note = list[position]
         val dialog = AlertDialog.Builder(this@MainActivity)
@@ -265,15 +284,14 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
             .setMessage("Are you sure you want to delete this note?")
             .setPositiveButton("Yes") { dialog: DialogInterface, which: Int ->
 
-            val database = Mydatabase.getInstance(this@MainActivity)
-            val data = database!!.noteDao()
-            CoroutineScope(Dispatchers.IO).launch {
-                data.delete(note)
-                list.removeAt(position)
+                val database = Mydatabase.getInstance(this@MainActivity)
+                val data = database!!.noteDao()
+                CoroutineScope(Dispatchers.IO).launch {
+                    data.delete(note)
+                    list.removeAt(position)
+                }
                 adapter.notifyDataSetChanged()
-//                adapter.notifyItemRemoved(position)
             }
-        }
         dialog.setNegativeButton("No", null)
         val alert = dialog.create()
         alert.show()

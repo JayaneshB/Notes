@@ -97,8 +97,7 @@ class AddNew : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
 
         CoroutineScope(Dispatchers.IO).launch {
 
-            val note = Note(
-                id,
+            val note = Note(id,
                 binding.titleEdit.text.toString(),
                 binding.descEdit.text.toString(),
                 binding.dateEdit.text.toString()
