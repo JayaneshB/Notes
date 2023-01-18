@@ -10,15 +10,20 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.project.notes.adapter.Note_adapter
 import com.project.notes.database.Mydatabase
 import com.project.notes.database.Note
 import com.project.notes.databinding.ActivityMainBinding
+import com.project.notes.swipegestures.SwipeGestures
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.*
 
 
 const val REQUEST_CODE = 1
@@ -43,11 +48,49 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
         setContentView(binding.root)
         setSupportActionBar(findViewById(R.id.toolbar))
 
-
         binding.recyclerView.setHasFixedSize(true)
         binding.recyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
 
         setData()
+
+        /**
+         *  Adding the swipe gestures
+         *  Swipe gesture for deleting a particular view
+         */
+
+        val swipegesture = object : SwipeGestures(this@MainActivity) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+
+                val from_positon = viewHolder.adapterPosition
+                val to_position = target.adapterPosition
+
+                Collections.swap(list,from_positon,to_position)
+                adapter.notifyItemMoved(from_positon,to_position)
+
+                return false
+
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+
+                when(direction) {
+
+                    ItemTouchHelper.LEFT -> {
+
+                        adapter.deleteItem(viewHolder.adapterPosition)
+
+                    }
+                }
+
+            }
+        }
+
+        val touchHelper = ItemTouchHelper(swipegesture)
+        touchHelper.attachToRecyclerView(recyclerView)
 
 
         /**
@@ -66,6 +109,10 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
             startActivityForResult(intent, REQUEST_CODE)
         }
     }
+
+    /**
+     *  Creating a new data to the database
+     */
 
     private fun setData() {
 
@@ -223,7 +270,8 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
             CoroutineScope(Dispatchers.IO).launch {
                 data.delete(note)
                 list.removeAt(position)
-                adapter.notifyItemRemoved(position)
+                adapter.notifyDataSetChanged()
+//                adapter.notifyItemRemoved(position)
             }
         }
         dialog.setNegativeButton("No", null)

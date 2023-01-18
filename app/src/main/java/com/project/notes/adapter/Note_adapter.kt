@@ -45,6 +45,7 @@ class Note_adapter(var list: MutableList<Note>,
         holder.date.text = note.date
         holder.itemView.setOnLongClickListener {
             onClick.onLongClick(position)
+            notifyDataSetChanged()
 //            notifyItemChanged(position)
             true
         }
@@ -69,6 +70,12 @@ class Note_adapter(var list: MutableList<Note>,
     fun clearList() {
 
         list.clear()
+        notifyDataSetChanged()
+    }
+
+    fun deleteItem(position : Int) {
+
+        list.removeAt(position)
         notifyDataSetChanged()
     }
 
