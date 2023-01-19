@@ -12,4 +12,13 @@
     <string name="notes">Notes</string>
     <string name="delete_all">Delete All</string>
     <string name="notes_splashScreen">NoTeS</string>
+    <string name="delete">Delete</string>
+    <string name="confirm_message">Are you sure you want to delete this note ?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="update_note">Note Updated</string>
+    <string name="save_note">Note Saved</string>
+    <string name="deletedSuccessfully">Deleted Successfully</string>
+    <string name="requirements_message">Please fill the requirements</string>
+
 </resources>

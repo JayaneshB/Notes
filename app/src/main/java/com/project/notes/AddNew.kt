@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class AddNew : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
+
     private lateinit var binding: ActivityAddNewBinding
 
     private lateinit var calendar: Calendar
@@ -35,7 +36,7 @@ class AddNew : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
 
         /**
          *  Added a calendar image button
-         *  to select the date for the aplication
+         *  to select the date for the application
          */
 
         formatter = SimpleDateFormat("dd/MM/yyyy", Locale.US)
@@ -122,7 +123,7 @@ class AddNew : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
             binding.descEdit.text.toString(),
             binding.dateEdit.text.toString()
         )
-        GlobalScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
             noteDao?.insert(note)
             withContext(Dispatchers.Main) {
                 val intent = Intent(this@AddNew, MainActivity::class.java)
@@ -138,7 +139,7 @@ class AddNew : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
                 .isEmpty() || binding.dateEdit.text.toString().isEmpty()
         ) {
 
-            Toast.makeText(this@AddNew, "Please fill the requirements", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@AddNew, resources.getString(R.string.requirements_message), Toast.LENGTH_SHORT).show()
             return false
         }
         return true
