@@ -8,6 +8,8 @@ import android.os.SystemClock
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -22,6 +24,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.lang.Exception
+import java.util.*
 
 
 const val REQUEST_CODE = 1
@@ -64,13 +68,13 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
                 viewHolder: RecyclerView.ViewHolder,
                 target: RecyclerView.ViewHolder
             ): Boolean {
-/*
+
                 val fromPosition = viewHolder.absoluteAdapterPosition
                 val toPosition = target.absoluteAdapterPosition
 
                 Collections.swap(list, fromPosition, toPosition)
-                adapter.notifyItemMoved(fromPosition, toPosition)*/
-                return true
+                adapter.notifyItemMoved(fromPosition, toPosition)
+                return false
 
             }
 
@@ -86,16 +90,19 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
                             .setMessage(resources.getString(R.string.confirm_message))
                             .setIcon(R.drawable.ic_delete)
                             .setPositiveButton(resources.getString(R.string.yes)) { dialog: DialogInterface, which: Int ->
+                                try {
+                                    val database = Mydatabase.getInstance(this@MainActivity)
+                                    val note = database?.noteDao()
+                                    val position = viewHolder.absoluteAdapterPosition
+                                    CoroutineScope(Dispatchers.IO).launch {
+                                      //  note?.delete(list[viewHolder.absoluteAdapterPosition])
+                                        
+                                        list.removeAt(position)
+                                    }
+                                    adapter.notifyDataSetChanged()
+                                } catch (e: Exception) {
 
-                                val database = Mydatabase.getInstance(this@MainActivity)
-                                val note = database?.noteDao()
-                                val position = viewHolder.absoluteAdapterPosition
-
-                                CoroutineScope(Dispatchers.IO).launch {
-                                    note?.delete(list[viewHolder.absoluteAdapterPosition])
-                                    list.removeAt(position)
                                 }
-                                adapter.notifyDataSetChanged()
                             }
                             .setNegativeButton(resources.getString(R.string.no)) { dialog: DialogInterface, which: Int ->
                                 val position = viewHolder.absoluteAdapterPosition
@@ -129,6 +136,14 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
             mLastClickTime = SystemClock.elapsedRealtime()
             val intent = Intent(this@MainActivity, AddNew::class.java)
             startActivityForResult(intent, REQUEST_CODE)
+//            val activityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult(), { result ->
+//                if (result.resultCode == Activity.RESULT_OK) {
+//                    setData()
+//                    Toast.makeText(this, resources.getString(R.string.save_note), Toast.LENGTH_SHORT).show()
+//                }
+//            })
+//            activityResult.launch(intent)
+//        }
         }
     }
 
@@ -174,6 +189,7 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
         intent.putExtra(DATE, note.date)
         intent.putExtra("position", position)
         startActivityForResult(intent, EDIT_REQUEST_CODE)
+//        getResult.launch(intent)
 
     }
 
@@ -188,9 +204,9 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
 
         if (requestCode == EDIT_REQUEST_CODE && resultCode == RESULT_OK) {
             val position = data?.getIntExtra("position", -1)
-            if (position != -1) {
-                if (position != null) {
-                    adapter.notifyItemChanged(position, position)
+            position?.let {
+                if (it != -1) {
+                    adapter.notifyItemChanged(it)
                 }
             }
             Toast.makeText(this, resources.getString(R.string.update_note), Toast.LENGTH_SHORT)
@@ -202,6 +218,20 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
         }
 
     }
+
+
+//    val getResult= registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {result: ActivityResult ->
+//
+//        if(result.requestCode  == EDIT_REQUEST_CODE && result.resultCode == RESULT_OK){
+//
+//            Toast.makeText(this, resources.getString(R.string.update_note), Toast.LENGTH_SHORT).show()
+//            setData()
+//        }else if(result.requestCode == EDIT_REQUEST_CODE && result.resultCode== RESULT_OK){
+//            Toast.makeText(this, resources.getString(R.string.save_note), Toast.LENGTH_SHORT).show()
+//            setData()
+//
+//        }
+
 
     /**
      *  Creating a menu
@@ -226,10 +256,9 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
             R.id.deleteAll -> {
 
                 showDialog()
+
             }
-
         }
-
         return super.onOptionsItemSelected(item)
     }
 
@@ -307,4 +336,5 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
     }
 
 }
+
 
