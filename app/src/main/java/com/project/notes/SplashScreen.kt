@@ -20,24 +20,6 @@ class SplashScreen : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySplashScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val text = SpannableString( binding.splashText.text.toString())
-        val fColor = ForegroundColorSpan(Color.YELLOW)
-        text.setSpan(fColor,0,1,Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
-
-        val sColor = ForegroundColorSpan(Color.WHITE)
-        text.setSpan(sColor,1,2,Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
-
-        val tColor = ForegroundColorSpan(Color.RED)
-        text.setSpan(tColor,2,3,Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
-
-        val foColor = ForegroundColorSpan(Color.MAGENTA)
-        text.setSpan(foColor,3,4,Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
-
-        val fiColor = ForegroundColorSpan(Color.CYAN)
-        text.setSpan(fiColor,4,5,Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-
-
-        binding.splashText.text = text
 
     Handler().postDelayed({
         startActivity(Intent(this@SplashScreen,MainActivity::class.java))

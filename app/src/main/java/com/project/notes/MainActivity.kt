@@ -1,6 +1,5 @@
 package com.project.notes
 
-
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
@@ -62,6 +61,9 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
 
         val swipeGesture = object : SwipeGestures(this@MainActivity) {
 
+            /**
+             *  Drag and Drop gesture is implemented
+             */
 
             override fun onMove(
                 recyclerView: RecyclerView,
@@ -81,10 +83,8 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
 
                 when (direction) {
-
                     ItemTouchHelper.LEFT -> {
                         // need to delete the actual record from the db
-
                         val dialog = AlertDialog.Builder(this@MainActivity)
                             .setTitle(resources.getString(R.string.delete))
                             .setMessage(resources.getString(R.string.confirm_message))
@@ -96,7 +96,6 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
                                     val position = viewHolder.absoluteAdapterPosition
                                     CoroutineScope(Dispatchers.IO).launch {
                                         note?.delete(list[position])
-
                                         list.removeAt(position)
                                     }
                                     adapter.notifyDataSetChanged()
@@ -106,28 +105,22 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
                             }
                             .setNegativeButton(resources.getString(R.string.no)) { dialog: DialogInterface, which: Int ->
                                 val position = viewHolder.absoluteAdapterPosition
-
                                 dialog.cancel()
                                 adapter.notifyItemChanged(position)
                             }
-
                         val alert = dialog.create()
                         alert.show()
-
                     }
                 }
-
             }
         }
         val touchHelper = ItemTouchHelper(swipeGesture)
         touchHelper.attachToRecyclerView(binding.recyclerView)
 
-
         /**
          *  Using startActivityForResult for displaying the result in the same activity
          *  without creating a new activity
          */
-
 
         binding.btnAdd.setOnClickListener {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
@@ -157,9 +150,7 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
         if (database != null) {
             val data = database.noteDao()
             CoroutineScope(Dispatchers.IO).launch {
-
                 list = data.getAllNote()
-
                 withContext(Dispatchers.Main) {
                     adapter = Note_adapter(list, this@MainActivity)
                     binding.recyclerView.adapter = adapter
@@ -193,11 +184,9 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
 
     }
 
-
     /**
      *  Retrieving the result using received from the startActivityForResult
      */
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -216,9 +205,7 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
             Toast.makeText(this, resources.getString(R.string.save_note), Toast.LENGTH_SHORT).show()
             setData()
         }
-
     }
-
 
 //    val getResult= registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {result: ActivityResult ->
 //
@@ -232,16 +219,12 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
 //
 //        }
 
-
     /**
      *  Creating a menu
      */
 
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-
         menuInflater.inflate(R.menu.menu_list, menu)
-
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -252,11 +235,8 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         when (item.itemId) {
-
             R.id.deleteAll -> {
-
                 showDialog()
-
             }
         }
         return super.onOptionsItemSelected(item)
@@ -265,7 +245,6 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
     /**
      *  Displaying a alert pop box to confirm the selected details
      */
-
 
     private fun showDialog() {
 
@@ -280,7 +259,6 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
                     }
                 })
             .setNegativeButton(resources.getString(R.string.no), null).show()
-
     }
 
     /**
@@ -291,19 +269,15 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
 
         val database = Mydatabase.getInstance(this@MainActivity)
         val noteDao = database?.noteDao()
-
         CoroutineScope(Dispatchers.IO).launch {
-
             noteDao?.deleteAllNotes()
             withContext(Dispatchers.Main) {
-
                 Toast.makeText(
                     this@MainActivity,
                     resources.getString(R.string.deletedSuccessfully),
                     Toast.LENGTH_SHORT
                 ).show()
                 adapter.clearList()
-
             }
         }
     }
@@ -334,7 +308,4 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
         val alert = dialog.create()
         alert.show()
     }
-
 }
-
-
