@@ -95,8 +95,8 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
                                     val note = database?.noteDao()
                                     val position = viewHolder.absoluteAdapterPosition
                                     CoroutineScope(Dispatchers.IO).launch {
-                                      //  note?.delete(list[viewHolder.absoluteAdapterPosition])
-                                        
+                                        note?.delete(list[position])
+
                                         list.removeAt(position)
                                     }
                                     adapter.notifyDataSetChanged()
