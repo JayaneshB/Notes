@@ -9,6 +9,7 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
+import android.view.animation.AnimationUtils
 import com.project.notes.databinding.ActivityAddNewBinding
 import com.project.notes.databinding.ActivitySplashScreenBinding
 
@@ -21,12 +22,14 @@ class SplashScreen : AppCompatActivity() {
         binding = ActivitySplashScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val animation = AnimationUtils.loadAnimation(this@SplashScreen,R.anim.splash_text_animation)
+
+        binding.splashText.startAnimation(animation)
+
     Handler().postDelayed({
         startActivity(Intent(this@SplashScreen,MainActivity::class.java))
         finish()
     },2000)
-
-
 
     }
 }
