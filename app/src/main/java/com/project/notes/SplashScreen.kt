@@ -1,5 +1,6 @@
 package com.project.notes
 
+import android.animation.Animator
 import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
@@ -29,7 +30,7 @@ class SplashScreen : AppCompatActivity() {
     Handler().postDelayed({
         startActivity(Intent(this@SplashScreen,MainActivity::class.java))
         finish()
-    },2000)
+    },8000)
 
     }
 }
