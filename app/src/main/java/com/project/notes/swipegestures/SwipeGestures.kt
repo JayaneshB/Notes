@@ -35,7 +35,7 @@ abstract class SwipeGestures(context: Context) : ItemTouchHelper.SimpleCallback(
             dY,
             actionState,
             isCurrentlyActive
-        ).addActionIcon(deleteIcon).addSwipeLeftBackgroundColor(deleteColor)
+        ).addActionIcon(deleteIcon).addSwipeLeftBackgroundColor(deleteColor).create().decorate()
 
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
     }

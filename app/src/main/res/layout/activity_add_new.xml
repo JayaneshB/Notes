@@ -71,6 +71,8 @@
         android:layout_marginEnd="150dp"
         android:hint="@string/date_format"
         android:maxLines="1"
+        android:inputType="date"
+        android:maxLength="10"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
