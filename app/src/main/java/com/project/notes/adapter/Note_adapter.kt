@@ -43,12 +43,12 @@ class Note_adapter(
         holder.title.text = note.title
         holder.desc.text = note.desc
         holder.date.text = note.date
-        holder.itemView.setOnLongClickListener {
-            onClick.onLongClick(position)
-            notifyDataSetChanged()
-//            notifyItemChanged(position)
-            true
-        }
+//        holder.itemView.setOnLongClickListener {
+//            onClick.onLongClick(position)
+//            notifyDataSetChanged()
+////            notifyItemChanged(position)
+//            true
+//        }
     }
 
     override fun getItemCount(): Int {
@@ -64,7 +64,7 @@ class Note_adapter(
     interface noteClickListener {
 
         fun onItemClick(position: Int)
-        fun onLongClick(position: Int)
+//        fun onLongClick(position: Int)
     }
 
     fun clearList() {

@@ -287,25 +287,25 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
      *  deleting a particular item
      */
 
-    override fun onLongClick(position: Int) {
-
-        val note: Note = list[position]
-        val dialog = AlertDialog.Builder(this@MainActivity)
-            .setTitle(resources.getString(R.string.delete))
-            .setMessage(resources.getString((R.string.confirm_message)))
-            .setIcon(R.drawable.ic_delete)
-            .setPositiveButton(resources.getString(R.string.yes)) { dialog: DialogInterface, which: Int ->
-
-                val database = Mydatabase.getInstance(this@MainActivity)
-                val data = database!!.noteDao()
-                CoroutineScope(Dispatchers.IO).launch {
-                    data.delete(note)
-                    list.removeAt(position)
-                }
-                adapter.notifyDataSetChanged()
-            }
-        dialog.setNegativeButton(resources.getString(R.string.no), null)
-        val alert = dialog.create()
-        alert.show()
-    }
+//    override fun onLongClick(position: Int) {
+//
+//        val note: Note = list[position]
+//        val dialog = AlertDialog.Builder(this@MainActivity)
+//            .setTitle(resources.getString(R.string.delete))
+//            .setMessage(resources.getString((R.string.confirm_message)))
+//            .setIcon(R.drawable.ic_delete)
+//            .setPositiveButton(resources.getString(R.string.yes)) { dialog: DialogInterface, which: Int ->
+//
+//                val database = Mydatabase.getInstance(this@MainActivity)
+//                val data = database!!.noteDao()
+//                CoroutineScope(Dispatchers.IO).launch {
+//                    data.delete(note)
+//                    list.removeAt(position)
+//                }
+//                adapter.notifyDataSetChanged()
+//            }
+//        dialog.setNegativeButton(resources.getString(R.string.no), null)
+//        val alert = dialog.create()
+//        alert.show()
+//    }
 }
