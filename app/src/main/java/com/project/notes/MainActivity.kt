@@ -7,8 +7,6 @@ import android.os.SystemClock
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -100,7 +98,7 @@ class MainActivity : AppCompatActivity(), Note_adapter.noteClickListener {
                                     }
                                     adapter.notifyDataSetChanged()
                                 } catch (e: Exception) {
-
+                                    println("")
                                 }
                             }
                             .setNegativeButton(resources.getString(R.string.no)) { dialog: DialogInterface, which: Int ->

@@ -7,14 +7,15 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.project.notes.R
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
+import kotlin.math.min
 
 abstract class SwipeGestures(context: Context) : ItemTouchHelper.SimpleCallback(
     ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.START or ItemTouchHelper.END,
     ItemTouchHelper.LEFT
 ) {
 
-    val deleteColor = ContextCompat.getColor(context, R.color.orangish_yellow)
-    val deleteIcon = R.drawable.ic_delete
+    private val deleteColor = ContextCompat.getColor(context, R.color.orangish_yellow)
+    private val deleteIcon = R.drawable.ic_delete
 
 
     override fun onChildDraw(
@@ -27,6 +28,10 @@ abstract class SwipeGestures(context: Context) : ItemTouchHelper.SimpleCallback(
         isCurrentlyActive: Boolean
     ) {
 
+        val swipeLimit = 1f
+
+        val limit  = min(dX, swipeLimit)
+
         RecyclerViewSwipeDecorator.Builder(
             c,
             recyclerView,
@@ -37,7 +42,7 @@ abstract class SwipeGestures(context: Context) : ItemTouchHelper.SimpleCallback(
             isCurrentlyActive
         ).addActionIcon(deleteIcon).addSwipeLeftBackgroundColor(deleteColor).create().decorate()
 
-        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+        super.onChildDraw(c, recyclerView, viewHolder, limit, dY, actionState, isCurrentlyActive)
     }
 
 

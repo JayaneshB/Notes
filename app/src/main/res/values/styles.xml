@@ -58,8 +58,8 @@
 
     <style name="AddNew_ImageBtn">
 
-        <item name="android:layout_width">45dp</item>
-        <item name="android:layout_height">45dp</item>
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">50dp</item>
 
     </style>
 
