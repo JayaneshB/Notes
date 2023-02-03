@@ -16,33 +16,24 @@ import java.util.*
 class AddNew : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
 
     private lateinit var binding: ActivityAddNewBinding
-
     private lateinit var calendar: Calendar
-
     private lateinit var formatter: SimpleDateFormat
-
     private lateinit var title: String
-
     private lateinit var desc: String
-
     private lateinit var date: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddNewBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         calendar = Calendar.getInstance()
 
         /**
          *  Added a calendar image button
          *  to select the date for the application
          */
-
         formatter = SimpleDateFormat("dd/MM/yyyy", Locale.US)
-
         binding.btnCalendar.setOnClickListener {
-
             DatePickerDialog(
                 this@AddNew,
                 this,
@@ -53,17 +44,13 @@ class AddNew : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
         }
 
         if (intent.hasExtra(NOTE_ID)) {
-
             title = intent.getStringExtra(TITLE).toString()
             desc = intent.getStringExtra(DESC).toString()
             date = intent.getStringExtra(DATE).toString()
 
-
-            binding.titleEdit.setText(title)
-            binding.descEdit.setText(desc)
-            binding.dateEdit.setText(date)
-
-
+            binding.etTitle.setText(title)
+            binding.etDesc.setText(desc)
+            binding.dateEdit.text = date
         }
 
         /**
@@ -71,36 +58,26 @@ class AddNew : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
          *  update and save option
          */
 
-
         binding.btnSave.setOnClickListener {
-
             if (validate()) {
                 if (intent.hasExtra(NOTE_ID)) {
-
                     updateNote()
-
                 } else {
-
                     saveNote()
-
                 }
             }
         }
     }
 
     private fun updateNote() {
-
         val id = intent.getIntExtra(NOTE_ID, -1)
-
-
         val database = Mydatabase.getInstance(this)
         val noteDao = database?.noteDao()
-
         CoroutineScope(Dispatchers.IO).launch {
-
-            val note = Note(id,
-                binding.titleEdit.text.toString(),
-                binding.descEdit.text.toString(),
+            val note = Note(
+                id,
+                binding.etTitle.text.toString(),
+                binding.etDesc.text.toString(),
                 binding.dateEdit.text.toString()
             )
             noteDao?.update(note)
@@ -112,15 +89,13 @@ class AddNew : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
         }
     }
 
-
     private fun saveNote() {
-
         val database = Mydatabase.getInstance(this)
         val noteDao = database?.noteDao()
         val note = Note(
             0,
-            binding.titleEdit.text.toString(),
-            binding.descEdit.text.toString(),
+            binding.etTitle.text.toString(),
+            binding.etDesc.text.toString(),
             binding.dateEdit.text.toString()
         )
         CoroutineScope(Dispatchers.IO).launch {
@@ -134,27 +109,39 @@ class AddNew : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
     }
 
     private fun validate(): Boolean {
-
-        if (binding.titleEdit.text.toString().isEmpty() || binding.descEdit.text.toString()
-                .isEmpty() || binding.dateEdit.text.toString().isEmpty()
+        val title = binding.etTitle.text.toString().trim()
+        if (title.isEmpty() || binding.etDesc.text.toString().trim()
+                .isEmpty() || binding.dateEdit.text.toString().trim().isEmpty()
         ) {
-
-            Toast.makeText(this@AddNew, resources.getString(R.string.requirements_message), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this@AddNew,
+                resources.getString(R.string.requirements_message),
+                Toast.LENGTH_SHORT
+            ).show()
+            return false
+        } else if (!validateTitle(title)) {
+            Toast.makeText(
+                this@AddNew,
+                resources.getString(R.string.title_validation_error),
+                Toast.LENGTH_SHORT
+            ).show()
             return false
         }
         return true
     }
 
-    override fun onDateSet(view: DatePicker?, year: Int, month: Int, date: Int) {
+    private fun validateTitle(title: String): Boolean {
+        val pattern = Regex("^[a-zA-Z0-9@$-]*$")
+        return pattern.matches(title)
+    }
 
+    override fun onDateSet(view: DatePicker?, year: Int, month: Int, date: Int) {
         calendar.set(year, month, date)
         displayFormattedDate(calendar.timeInMillis)
-
     }
 
     private fun displayFormattedDate(data: Long) {
-
-        binding.dateEdit.setText(formatter.format(data))
+        binding.dateEdit.text = formatter.format(data)
 
     }
 

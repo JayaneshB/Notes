@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
+    android:background="@color/darker_grey"
     tools:context=".AddNew">
 
 
@@ -18,19 +18,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.060000002" />
-
-    <androidx.appcompat.widget.AppCompatEditText
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/title_edit"
-        style="@style/Details_Edit_box"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:hint="@string/fill_the_title"
-        android:lines="1"
-        android:inputType="text"
-        android:nextFocusDown="@id/desc_edit"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_title"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/add_title" >
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Details_Edit_box"
+            android:lines="1"
+            android:inputType="text"
+            android:maxLength="30"
+            android:nextFocusDown="@id/desc_edit"
+            tools:text="kjdns asckj aksfc adc afcw  kln ascqacdb qkjfw kjb qkjfbqef qaqefkjb qef jkbjk  "
+            />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/add_desc"
@@ -44,19 +51,26 @@
         app:layout_constraintTop_toBottomOf="@+id/title_edit"
         app:layout_constraintVertical_bias="0.0" />
 
-    <androidx.appcompat.widget.AppCompatEditText
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/desc_edit"
-        style="@style/Details_Edit_box"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:hint="@string/fill_the_description"
-        android:lines="2"
-        android:inputType="text"
-        android:maxLength="150"
-        android:imeOptions="actionGo"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_desc"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/add_desc">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Details_Edit_box"
+            android:maxLines="2"
+            android:maxLength="150"
+            android:inputType="textMultiLine"
+            android:nextFocusDown="@id/btn_calendar"
+            tools:text="kjdns asckj aksfc adc afcw  kln ascqacdb qkjfw kjb qkjfbqef qaqefkjb qef jkbjk  "
+            />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/appCompatTextView"
@@ -92,24 +106,23 @@
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/btn_calendar"
         style="@style/AddNew_ImageBtn"
+        android:layout_marginEnd="32dp"
         android:background="@drawable/ic_calendar_btn_bg"
         android:src="@drawable/ic_calendar_btn"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/date_edit"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.59"
-        app:layout_constraintStart_toEndOf="@+id/date_edit"
-        app:layout_constraintTop_toBottomOf="@+id/appCompatTextView"
+        app:layout_constraintTop_toTopOf="@+id/date_edit"
         app:layout_constraintVertical_bias="0.050000012" />
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/btn_save"
         style="@style/AddNew_ImageBtn"
+        android:layout_marginBottom="64dp"
         android:background="@drawable/ic_btn_bg"
         android:src="@drawable/ic_save_btn"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/date_edit" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

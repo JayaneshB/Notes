@@ -8,7 +8,6 @@
         <item name="android:layout_marginStart">15dp</item>
         <item name="android:layout_marginTop">16dp</item>
         <item name="android:layout_marginEnd">20dp</item>
-        <item name="android:hint">@string/fill_the_title</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">18sp</item>
         <item name="android:textStyle">normal</item>

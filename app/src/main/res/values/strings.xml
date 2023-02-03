@@ -20,5 +20,6 @@
     <string name="save_note">Note Saved</string>
     <string name="deletedSuccessfully">Deleted Successfully</string>
     <string name="requirements_message">Please fill the requirements</string>
+    <string name="title_validation_error">Title can only contain alphabets,numbers or @,$,-</string>
 
 </resources>
