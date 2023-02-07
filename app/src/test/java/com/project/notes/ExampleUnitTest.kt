@@ -10,8 +10,21 @@ import org.junit.Assert.*
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 class ExampleUnitTest {
+
+
+        private fun regexTest(title: String): Boolean {
+            val pattern = Regex("^[a-zA-Z0-9@$-]*$")
+            return pattern.matches(title)
+        }
+
     @Test
     fun addition_isCorrect() {
         assertEquals(4, 2 + 2)
+    }
+
+    @Test
+    fun regexSpaceText() {
+        val result = regexTest(" 54354")
+        assertEquals(false, result)
     }
 }

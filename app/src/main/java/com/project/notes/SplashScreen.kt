@@ -11,6 +11,7 @@ import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.animation.AnimationUtils
+import androidx.core.splashscreen.SplashScreen
 import com.project.notes.databinding.ActivityAddNewBinding
 import com.project.notes.databinding.ActivitySplashScreenBinding
 

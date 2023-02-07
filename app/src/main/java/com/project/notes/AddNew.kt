@@ -109,8 +109,8 @@ class AddNew : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
     }
 
     private fun validate(): Boolean {
-        val title = binding.etTitle.text.toString().trim()
-        if (title.isEmpty() || binding.etDesc.text.toString().trim()
+        val title = binding.etTitle.text.toString()
+        if (title.trim().isEmpty() || binding.etDesc.text.toString().trim()
                 .isEmpty() || binding.dateEdit.text.toString().trim().isEmpty()
         ) {
             Toast.makeText(
